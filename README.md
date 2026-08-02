@@ -1,22 +1,52 @@
-# OFDM Wireless Communication System using MATLAB/Simulink
+# OFDM Wireless Communication System
 
-## Overview
+An implementation of an Orthogonal Frequency Division Multiplexing (OFDM) communication system using **MATLAB** and **Simulink**. This project demonstrates the complete transmission and reception of OFDM signals using QPSK modulation and evaluates system performance under AWGN and Rayleigh fading channels.
 
-This project demonstrates the simulation and performance analysis of an Orthogonal Frequency Division Multiplexing (OFDM) based wireless communication system using MATLAB and Simulink.
+---
 
-The system implements QPSK modulation, OFDM modulation/demodulation, AWGN and Rayleigh fading channels, and evaluates performance using Bit Error Rate (BER) analysis and constellation diagrams.
+## Project Objectives
+
+- Design and simulate an OFDM communication system.
+- Implement QPSK modulation and demodulation.
+- Analyze Bit Error Rate (BER) performance under different channel conditions.
+- Compare OFDM performance over AWGN and Rayleigh fading channels.
+- Visualize transmitted and received constellation diagrams.
 
 ---
 
 ## Features
 
-- QPSK Modulation and Demodulation
-- OFDM Modulation and Demodulation
+- Random Bit Generation
+- QPSK Modulation & Demodulation
+- Serial-to-Parallel Conversion
+- OFDM Modulation (IFFT)
+- Cyclic Prefix Addition & Removal
 - AWGN Channel Simulation
-- Rayleigh (SISO Fading) Channel Simulation
+- Rayleigh Fading Channel Simulation
+- OFDM Demodulation (FFT)
 - BER Calculation
 - BER vs SNR Analysis
-- Constellation Diagram Visualization
+- MATLAB & Simulink Implementation
+
+---
+
+## Repository Structure
+
+```
+OFDM-Wireless-Communication-System
+│
+├── MATLAB_Code/
+│
+├── Simulink_Models/
+│
+├── Results/
+│
+├── Documentation/
+│
+├── README.md
+│
+└── LICENSE
+```
 
 ---
 
@@ -25,56 +55,48 @@ The system implements QPSK modulation, OFDM modulation/demodulation, AWGN and Ra
 - MATLAB R2025b
 - Simulink
 - Communications Toolbox
-- DSP System Toolbox
 
 ---
 
-## System Flow
+## Modulation Technique
 
-```
-Random Bit Generator
-        ↓
-QPSK Modulator
-        ↓
-OFDM Modulator
-        ↓
-AWGN / Rayleigh Channel
-        ↓
-OFDM Demodulator
-        ↓
-QPSK Demodulator
-        ↓
-BER Calculation
-```
+- QPSK
+
+---
+
+## OFDM Parameters
+
+| Parameter | Value |
+|-----------|-------|
+| FFT Length | 64 |
+| Cyclic Prefix | 16 |
+| Guard Bands | [6 5] |
+| Modulation | QPSK |
 
 ---
 
 ## Results
 
-- Successfully simulated an end-to-end OFDM communication system.
-- BER decreases with increasing SNR under the AWGN channel.
-- Rayleigh fading significantly degrades system performance.
-- Performance evaluated using BER analysis and constellation diagrams.
+### AWGN Channel
+
+- BER decreases as Signal-to-Noise Ratio (SNR) increases.
+- Constellation becomes increasingly clear at higher SNR values.
+
+### Rayleigh Fading Channel
+
+- Model implemented using the SISO Fading Channel block.
+- BER analysis is under validation and repository will be updated with final performance plots.
 
 ---
 
-## Future Scope
+## Future Improvements
 
 - Channel Estimation
 - One-Tap Equalization
-- Pilot-Based OFDM
-- 16-QAM / 64-QAM
+- Pilot Assisted OFDM
+- Higher Order Modulation (16-QAM / 64-QAM)
 - MIMO-OFDM
-- 5G NR Physical Layer Extensions
-
----
-
-## Repository Contents
-
-- MATLAB source code (`.m` files)
-- Simulink models (`.slx`)
-- BER vs SNR graph
-- Project report (to be added)
+- 5G NR Waveform Integration
 
 ---
 
@@ -82,6 +104,12 @@ BER Calculation
 
 **Nandinee Tandon**
 
-B.Tech, Electronics and Communication Engineering
+B.Tech Electronics & Communication Engineering
 
 National Institute of Technology Hamirpur
+
+---
+
+## License
+
+This project is licensed under the MIT License.
