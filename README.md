@@ -57,6 +57,7 @@ utilities/                     pilot layout, plotting, display and verification 
 tests/run_tests.m              automatic checks
 docs/theory.md                 equations and modelling assumptions
 result/                        figures and ber_results.csv (created by main.m)
+simulink_models/               separate Simulink version of the OFDM link (see below)
 ```
 
 ## Parameters
@@ -114,6 +115,15 @@ What the simulation shows (exact numbers vary slightly from run to run):
 - **Rayleigh without equalizer:** BER stays near 0.5 at every SNR, because each
   subcarrier is rotated by a random phase and QPSK decisions become random.
 
+## Simulink model
+
+`simulink_models/` contains a separate Simulink implementation of the OFDM link
+(MATLAB R2025b, Communications Toolbox), built with Simulink blocks including
+the SISO Fading Channel block. Its parameters are FFT length 64, cyclic prefix
+16, guard bands [6 5] and QPSK. It is independent of the base-MATLAB code above,
+which has no guard bands and needs no toolboxes. BER results from the Simulink
+model are not part of this repository.
+
 ## Assumptions and limitations
 
 - Block fading: the channel is constant within each OFDM symbol (no Doppler),
@@ -132,7 +142,7 @@ What the simulation shows (exact numbers vary slightly from run to run):
 - Higher-order modulation (16-QAM / 64-QAM)
 - Channel coding
 - MIMO-OFDM
-- Simulink model of the same chain
+- Add pilot-based channel estimation to the Simulink model
 
 ## License
 
