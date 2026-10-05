@@ -1,32 +1,20 @@
-function save_figure(figName, filePath)
+function save_figure(fig, filePath)
 % SAVE_FIGURE
-% Saves the figure whose Name is figName as an image.
-%
-% The figure is looked up by name at save time instead of using a stored
-% handle, because in MATLAB's docked Figures window a stored handle can
-% become invalid after the first export.
-
-f = findall(groot, 'Type', 'figure', 'Name', figName);
-
-if isempty(f)
-    warning('Figure "%s" not found, not saved.', figName);
-    return;
-end
-
-f = f(1);
-drawnow;
+% Saves a figure as an image. Call it right after creating the figure.
+% Falls back to saveas if exportgraphics is not available or fails.
 
 try
-    exportgraphics(f, filePath, 'Resolution', 150);
+    if exist('exportgraphics') > 0 %#ok<EXIST>
+        exportgraphics(fig, filePath, 'Resolution', 150);
+    else
+        saveas(fig, filePath);
+    end
 catch
     try
-        saveas(f, filePath);
+        saveas(fig, filePath);
     catch err
         warning('Could not save %s: %s', filePath, err.message);
-        return;
     end
 end
-
-fprintf('Saved %s\n', filePath);
 
 end
