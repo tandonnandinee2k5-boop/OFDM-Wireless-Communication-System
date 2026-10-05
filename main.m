@@ -48,6 +48,7 @@ symbols = qpsk_modulator(bits);
 display_first_symbols(symbols);
 
 figConstTx = plot_constellation(symbols(1:4000), 'Transmitted QPSK Constellation', 120, 1.5);
+set(figConstTx, 'Name', 'constellation_tx');
 
 par      = serial_to_parallel(symbols, cfg.numData);   % data per OFDM symbol
 X        = insert_pilots(par, cfg);                    % add known pilots
@@ -56,6 +57,7 @@ txSignal = add_cyclic_prefix(ofdmSig, p.cpLength);
 verify_cyclic_prefix(txSignal, ofdmSig, p.cpLength);
 
 figWave = plot_waveform(real(txSignal(1,:)), 'OFDM Symbol with Cyclic Prefix (real part)');
+set(figWave, 'Name', 'ofdm_symbol_with_cp');
 
 %% 3. SINGLE RUN: AWGN CHANNEL --------------------------------------------
 rxAwgn = awgn_channel(txSignal, demoSnr);
@@ -63,6 +65,7 @@ Y      = ofdm_demodulator(remove_cyclic_prefix(rxAwgn, p.cpLength));
 dataRx = extract_data(Y, cfg);
 figConstAwgn = plot_constellation(dataRx(1:4000), ...
     sprintf('Received Constellation, AWGN, SNR = %d dB', demoSnr));
+set(figConstAwgn, 'Name', 'constellation_awgn');
 berAwgn = calculate_ber(bits, qpsk_demodulator(parallel_to_serial(dataRx)));
 disp('AWGN channel:');  display_ber(berAwgn);
 
@@ -74,6 +77,7 @@ Y          = ofdm_demodulator(remove_cyclic_prefix(rxRay, p.cpLength));
 dataRx = extract_data(Y, cfg);
 figConstRay = plot_constellation(dataRx(1:4000), ...
     sprintf('Rayleigh Fading, NO Equalizer, SNR = %d dB', demoSnr));
+set(figConstRay, 'Name', 'constellation_rayleigh_no_eq');
 berNoEq = calculate_ber(bits, qpsk_demodulator(parallel_to_serial(dataRx)));
 disp('Rayleigh channel, no equalizer:');  display_ber(berNoEq);
 
@@ -97,11 +101,13 @@ disp('Rayleigh channel, pilot estimate LS + linear interpolation:');  display_be
 dataEq = extract_data(one_tap_equalizer(Y, Hdft), cfg);
 figConstEq = plot_constellation(dataEq(1:4000), ...
     sprintf('Rayleigh Fading, Pilot-Based Equalizer (LS+DFT), SNR = %d dB', demoSnr), 8, 2);
+set(figConstEq, 'Name', 'constellation_rayleigh_pilot_eq');
 ber3   = calculate_ber(bits, qpsk_demodulator(parallel_to_serial(dataEq)));
 disp('Rayleigh channel, pilot estimate LS + DFT interpolation:');  display_ber(ber3);
 
 figChan = plot_channel_estimate(H, Hlin, Hdft, cfg, 1, ...
     sprintf('Channel Estimation, First OFDM Symbol, SNR = %d dB', demoSnr));
+set(figChan, 'Name', 'channel_estimation');
 
 %% 5. BER vs SNR -----------------------------------------------------------
 disp('Running BER simulation (this can take a minute)...');
@@ -114,6 +120,7 @@ berThAwgn  = theoretical_ber(snrRange, 'awgn');
 berThRay   = theoretical_ber(snrRange, 'rayleigh');
 
 figBer = figure;
+set(figBer, 'Name', 'ber_vs_snr');
 semilogy(snrRange, berAwgnSim, 'bo-', 'LineWidth', 1.5, 'MarkerSize', 6); hold on;
 semilogy(snrRange, berThAwgn,  'b--', 'LineWidth', 1.0);
 semilogy(snrRange, berPerfect, 'rs-', 'LineWidth', 1.5, 'MarkerSize', 6);
@@ -140,13 +147,13 @@ disp('(NaN = no bit errors observed, BER too low to measure)');
 
 %% 6. SAVE RESULTS ---------------------------------------------------------
 if saveFiles
-    save_figure(figConstTx,   fullfile(resultDir, 'constellation_tx.png'));
-    save_figure(figWave,      fullfile(resultDir, 'ofdm_symbol_with_cp.png'));
-    save_figure(figConstAwgn, fullfile(resultDir, 'constellation_awgn.png'));
-    save_figure(figConstRay,  fullfile(resultDir, 'constellation_rayleigh_no_eq.png'));
-    save_figure(figConstEq,   fullfile(resultDir, 'constellation_rayleigh_pilot_eq.png'));
-    save_figure(figChan,      fullfile(resultDir, 'channel_estimation.png'));
-    save_figure(figBer,       fullfile(resultDir, 'ber_vs_snr.png'));
+    save_figure('constellation_tx', fullfile(resultDir, 'constellation_tx.png'));
+    save_figure('ofdm_symbol_with_cp', fullfile(resultDir, 'ofdm_symbol_with_cp.png'));
+    save_figure('constellation_awgn', fullfile(resultDir, 'constellation_awgn.png'));
+    save_figure('constellation_rayleigh_no_eq', fullfile(resultDir, 'constellation_rayleigh_no_eq.png'));
+    save_figure('constellation_rayleigh_pilot_eq', fullfile(resultDir, 'constellation_rayleigh_pilot_eq.png'));
+    save_figure('channel_estimation', fullfile(resultDir, 'channel_estimation.png'));
+    save_figure('ber_vs_snr', fullfile(resultDir, 'ber_vs_snr.png'));
 
     fid = fopen(fullfile(resultDir, 'ber_results.csv'), 'w');
     fprintf(fid, 'snr_db,awgn_sim,rayleigh_perfect_csi,rayleigh_ls_dft,rayleigh_ls_linear,rayleigh_no_eq,awgn_theory,rayleigh_theory\n');
